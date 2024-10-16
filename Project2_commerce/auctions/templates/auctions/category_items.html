@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Listings in {{ category_name }} Category
+{% endblock %}
+
+{% block body %}
+    <h3>Listings in {{ category_name }} Category</h3>
+
+    <div class="row">
+        {% for item in listings_with_bids %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="part-1">
+                <img src="{{ item.listing.imageUrl }}" class="card-img-top" alt="Listing Image" style="height: 200px; object-fit: cover;">
+                <ul>
+                    <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                    <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                    <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                </ul>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.listing.title }}</h5>
+                    <p class="card-text">{{ item.listing.description|truncatechars:100 }}</p>
+                    <p class="card-text"><strong>Current Bid:</strong> ${{ item.current_bid }}</p>
+                    <a href="{% url 'listingDetail' item.listing.id %}" class="btn btn-info">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No listings found in this category.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+textarea {
+    min-height: 400px;
+}
+
+.emailread {
+    background-color: gray;
+}
+
+.emailunread {
+    background-color: white;
+}

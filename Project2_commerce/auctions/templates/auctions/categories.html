@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Category Listings
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <!-- Title for the active category -->
+        <h3>Active Listings All Categories</h3>
+
+        <h5>Select a Category:</h5>
+
+        <div class="category-buttons">
+        <!-- Button for the 'None' category -->
+        <a href="{% url 'category_items' 'none' %}" class="btn btn-primary">None</a>
+
+        <!-- Buttons for all other categories -->
+        {% for category in categories %}
+            <a href="{% url 'category_items' category.id %}" class="btn btn-secondary">{{ category.categoryName }}</a>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

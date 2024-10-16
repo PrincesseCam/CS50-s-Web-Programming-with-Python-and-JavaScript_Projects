@@ -1,0 +1,271 @@
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 10px;
+    
+}
+
+.navbar-items {
+    margin: 0 10px;
+    
+}
+
+.navbar-items-advanced {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-right: 20px;
+
+}
+
+a:link, a:visited {
+    color: black;   
+    cursor: auto;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 13px;
+}
+  
+a:link:active, a:visited:active {
+    color: black;
+    
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.Google_logo {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    width: auto;
+}
+
+img {
+    height: 92px;
+    aspect-ratio: auto 272 / 92;
+    width: 272px;
+}
+
+.Center {
+    display: flex;
+    justify-content: center;
+}
+
+.Center2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.input {
+    display: flex;
+    z-index: 3;
+    position: relative;
+    min-height: 44px;
+    background: #fff;
+    border: 1px solid #dfe1e5;
+    box-shadow: none;
+    border-radius: 24px;
+    margin: 0 auto;
+    width: 638px;
+    max-width: 584px;
+    margin-top: 30px;
+    padding-left: 16px; 
+}
+
+.input input[type="text"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 20px;
+    margin: 0;
+    background: transparent; 
+}
+
+.input .search-icon {
+    background: url('/images/search_icon.png') no-repeat;
+    background-size: 20px 20px; 
+    width: 20px; 
+    height: 20px; 
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px; 
+    z-index: 4; 
+}
+
+#button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#button:hover {
+    background-color: #f8f9fa;
+    border: 1px solid #b3abab8f;
+    /*box-shadow: 0 2px 6px 0 rgba(0,0,0,0.24);*/
+}
+
+.top {
+    padding-top: 200px;
+}
+
+.advanced-Top {
+    color: #d93025;
+    font-size: 20px;
+    font-family: arial, sans-serif;
+    margin: 25px 35px;
+}
+
+#line {
+    border-bottom: 1px solid #ebebeb;
+}
+
+.advanced-Title {
+    font-size: 16px arial, sans-serif;
+    margin-left: 35px;
+}
+
+.div-advanced {
+    margin: 35px;
+}
+
+.advanced-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.left {
+    width: 30%;
+}
+
+.center {
+    width: 80%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.right {
+    width: 90%;
+}
+
+.p-advanced {
+    font-size: 13px;
+    vertical-align: middle;
+    font-family: arial, sans-serif;
+}
+
+.btn-advanced {
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-color: #4d90fe; 
+    border: 1px solid #3079ed;
+    color: #fff;
+    cursor: default !important;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    height: 27px;
+    width: 110px;
+}
+
+.btn-advanced:hover {
+    background-color: #4787ed; 
+}
+ 
+
+.btn-div {
+    display: flex;
+    justify-content: right;
+    margin-top: 30px;
+    width: 41%;
+}
+
+.p-advanced-explanation {
+    color: #777;
+    font-size: 13px;
+    font-weight: 700px;
+    font-family: arial, sans-serif;
+    margin-top: 15px;
+}
+
+.space {
+    margin-top: 45px;
+}
+
+.Top-items {
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.form-label {
+    width: 90%;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+}
+
+@media (min-width: 1200px) {
+    .input-explanation {
+        float: right;
+        width: 56%;
+        padding-left: 5px;
+        vertical-align: middle;
+        
+    }
+    .explanation {
+        float: right;
+        width: 57%;
+        padding-left: 5px;
+        vertical-align: middle;
+        color: #777;
+        font-size: 16px arial, sans-serif;
+    
+    }
+    .form-label {
+        width: 90%;
+        border: 1px solid #d9d9d9;
+        border-top: 1px solid #c0c0c0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .input-explanation,
+    .explanation {
+        display: none;
+    }
+    .form-label {
+        width: 30%;
+        border: 1px solid #d9d9d9;
+        border-top: 1px solid #c0c0c0;
+    }
+}

@@ -1,0 +1,126 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <!-- product section -->
+    <section class="product-container">
+        <!-- left side -->
+        <div class="img-listing">
+            <img src="{{listing.imageUrl}}" alt="{{ listing.title }}" id="featured-image">
+        </div>
+        <!-- Right side -->
+        <div class="product-info">
+            <h3>{{ listing.title }}</h3>
+            <p><strong>Description: </strong>{{ listing.description }}</p>
+            <p><strong>Starting Bid: </strong>${{ listing.starting_bid }}</p>
+            <p><strong>Current Bid: </strong>
+                {% if highest_bid %}
+                    ${{ highest_bid.amount }}
+                {% else %}
+                    No bids yet
+                {% endif %}
+            </p>
+            <p><strong>Category: </strong>{{ listing.category.categoryName }}</p>
+            <p><strong>Created by: </strong>{{ listing.owner.username }}</p>
+            <p><strong>Created at:</strong> {{ listing.created_at|date:"F j, Y, g:i a" }}</p>
+            
+                <div class="Bid-section">
+                    {% if user.is_authenticated %}
+                    <!-- Message for the winner -->
+                        {% if winner and winner == user %}
+                        <div>    
+                            <p class="text-center text-bg-danger fs-5">
+                                <i class="far fa-star"></i>Congratulations, you won the auction!
+                                <i class="far fa-star"></i>
+                            </p>  
+                        </div>
+                    <!-- Message for the highest bidder -->
+                        {% endif %}
+                        {% if highest_bid and highest_bid.user == user %}
+                            <p>You are the highest bidder.</p>
+                        {% endif %}
+                    <!-- Message to notified that no bid is allowed after closing the auction -->
+                        {% if is_closed %}
+                        <p class="text-muted"><strong>This auction is closed. No more bids are allowed.</strong></p>
+                        {% else %}
+                    <!-- Bid Form -->
+                        <form class="ListingButton" action="" method="post">
+                            {% csrf_token %}
+                            <label for="bid">Place your bid:</label>
+                            <input type="number" name="bid" 
+                           min="{% if highest_bid %}{{ highest_bid.amount }}{% else %}{{ listing.starting_bid }}{% endif %}" 
+                           step="0.01" required>
+                            <button class="button1" type="submit">Bid</button>
+                        </form>
+                        {% endif %}
+                    <!-- Watchlist and close auction buttons -->
+                        <div class="ListingButton2">
+                        <div class="ListingButton2-1">
+                        {% if is_in_watchlist %}
+                            <button class="button1" onclick="window.location.href='{% url 'remove_watchlist' listing.id %}'">Remove from Watchlist</button>
+                        {% else %}
+                            <button class="button1" onclick="window.location.href='{% url 'add_watchlist' listing.id %}'">Add to Watchlist</button>
+                        {% endif %}
+                        </div>
+                        <div class="ListingButton2-1">
+                        {% if is_closed %}
+                        <p class="text-success"><strong>The bid is closed. The winner is {{ winner.username }}!</strong></p>
+                        {% else %}
+                            <!-- Only show the Close Auction button if the user is the owner and the auction is active -->
+                            {% if is_owner %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="close_auction" class="btn btn-danger">Close Auction</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                    </div>
+
+                        {% if messages %}
+                        {% for message in messages %}
+                            <h6 style="color: red;">{{ message }}</h6>
+                        {% endfor %}
+                        {% endif %}
+                        {% endif %}
+            </div>
+            
+        </div>
+    </section>
+
+<!-- Comments Section -->
+<div class="container">
+    <div class="be-comment-block">
+        <h3 class="comments-title">Comments</h3>
+
+        {% if comments %}
+        {% for comment in comments %}
+        <div class="be-comment">
+            <div class="be-comment-content">
+                    <span class="be-comment-name"><i class="fa-duotone fas fa-user"></i> {{ comment.user.username }}</span>
+                    <span class="be-comment-time">
+                        <i class="far fa-clock"></i>
+                        {{ comment.timestamp|date:"F j, Y, g:i a" }}
+                    </span>
+    
+                <p class="be-comment-text">
+                    {{ comment.content }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        No comments yet
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <form class="be-comment-content" action="" method="post">
+            {% csrf_token %}
+            <textarea name="comment" placeholder="Add your comment" required></textarea>
+            <button class="button1" type="submit">Add Comment</button>
+        </form>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
