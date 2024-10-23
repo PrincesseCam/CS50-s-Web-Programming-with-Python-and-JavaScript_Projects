@@ -70,9 +70,17 @@ function load_mailbox(mailbox) {
     // Loop through emails and display each one
     emails.forEach(email => {
       const emailDiv = document.createElement('div');
-      emailDiv.className = 'email-entry';
-      emailDiv.style.backgroundColor = email.read ? 'gray' : 'white';
-      emailDiv.innerHTML = `<b>${email.sender}</b> ${email.subject} <span class="timestamp">${email.timestamp}</span>`;
+      //change background-color
+      emailDiv.className = email.read ? 'emailread' : 'emailunread';
+      emailDiv.innerHTML = `
+      <ul class="email-list">
+        <li class="email-item">
+          <span>${email.sender}</span>
+          <span class="subject">${email.subject}</span>
+          <span class="timestamp">${email.timestamp}</span>
+        </li>
+      </ul>
+      `;
 
       // Add event listener to view the email when clicked
       emailDiv.addEventListener('click', () => View_email(email.id));
@@ -93,13 +101,13 @@ function View_email(id) {
 
     // Display email details
     document.querySelector('#emails-details-view').innerHTML = `
-      <b>From:</b> ${email.sender}<br>
-      <b>To:</b> ${email.recipients.join(', ')}<br>
-      <b>Subject:</b> ${email.subject}<br>
-      <b>Timestamp:</b> ${email.timestamp}<br>
-      <hr>
-      ${email.body}
-      <hr>`;
+        <b>From:</b> ${email.sender}<br>
+        <b>To:</b> ${email.recipients.join(', ')}<br>
+        <b>Subject:</b> ${email.subject}<br>
+        <b>Timestamp:</b> ${email.timestamp}<br>
+        <hr>
+        ${email.body}
+        <hr>`;
 
     // Mark the email as read
     if (!email.read) {
@@ -118,7 +126,7 @@ function View_email(id) {
           method: 'PUT',
           body: JSON.stringify({ archived: !email.archived })
         })
-        .then(() => load_mailbox('inbox'));  // Load inbox after archiving/unarchiving
+        .then(() => load_mailbox('inbox'));
       });
       document.querySelector('#emails-details-view').append(archiveButton);
     }
