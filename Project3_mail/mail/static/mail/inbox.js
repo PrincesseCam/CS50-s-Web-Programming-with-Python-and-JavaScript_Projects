@@ -67,11 +67,11 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
-    // Loop through emails and display each one
     emails.forEach(email => {
       const emailDiv = document.createElement('div');
       //change background-color
       emailDiv.className = email.read ? 'emailread' : 'emailunread';
+      // Style
       emailDiv.innerHTML = `
       <ul class="email-list">
         <li class="email-item">
@@ -120,6 +120,7 @@ function View_email(id) {
     const currentMailbox = document.querySelector('h3').innerText.toLowerCase();
     if (currentMailbox === 'inbox' || currentMailbox === 'archive') {
       const archiveButton = document.createElement('button');
+      archiveButton.className = 'btn btn-secondary';
       archiveButton.innerHTML = email.archived ? 'Unarchive' : 'Archive';
       archiveButton.addEventListener('click', () => {
         fetch(`/emails/${id}`, {
@@ -134,12 +135,13 @@ function View_email(id) {
     // Reply button for emails in the inbox
     if (currentMailbox === 'inbox') {
       const replyButton = document.createElement('button');
+      replyButton.className = 'btn btn-primary';
       replyButton.innerHTML = 'Reply';
       replyButton.addEventListener('click', () => {
         compose_email();
         document.querySelector('#compose-recipients').value = email.sender;
         document.querySelector('#compose-subject').value = email.subject.startsWith('Re:') ? email.subject : `Re: ${email.subject}`;
-        document.querySelector('#compose-body').value = `\n\n\n---\nOn ${email.timestamp}, ${email.sender} \n wrote:${email.body} \n`;
+        document.querySelector('#compose-body').value = `\n\n---\nOn ${email.timestamp}, ${email.sender} \n wrote:${email.body} \n`;
       });
       document.querySelector('#emails-details-view').append(replyButton);
     }

@@ -5,15 +5,16 @@
 <div class="container">
     <div class="sidebar" id="sidebar">
         <ul class="menu">
-        <h2 class="compose-btn">{{ request.user.email }}</h2>
-        
-        <li id="inbox">Inbox</li>
-        <li id="compose">Compose</li>
-        <li id="sent">Sent</li>
-        <li id="archived">Archived</li>
-        <a href="{% url 'logout' %}">Log Out</a>
+        <p class="userEmail"><i class="bi bi-person-circle"></i>{{ request.user.email }}</p>  
+        <li id="inbox"><i class="bi bi-inbox"></i>Inbox</li>
+        <li id="compose" ><i class="bi bi-pencil-square"></i>Compose</li>
+        <li id="sent"><i class="bi bi-send"></i>Sent</li>
+        <li id="archived"><i class="bi bi-archive"></i>Archived</li>
+        <a href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i>Log Out</a>
         </ul>
     </div>
+
+    <span class="navbar-toggler d-md-none">☰</span>
 
     <div class="main-content">
 
@@ -43,6 +44,24 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hamburger menu functionality
+        const toggleButton = document.querySelector('.navbar-toggler');
+        const sidebar = document.querySelector('.sidebar');
+        
+        toggleButton.addEventListener("click", function() {
+            sidebar.classList.toggle("show");
+        });
+
+        // Hide sidebar when clicking outside
+        document.addEventListener("click", function(event) {
+            if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+                sidebar.classList.remove("show");
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% block script %}
