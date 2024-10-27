@@ -116,7 +116,8 @@ function View_email(id) {
         body: JSON.stringify({ read: true })
       });
     }
-    // archive/unarchive button
+
+    // Archive/Unarchive buttons
     const currentMailbox = document.querySelector('h3').innerText.toLowerCase();
     if (currentMailbox === 'inbox' || currentMailbox === 'archive') {
       const archiveButton = document.createElement('button');
