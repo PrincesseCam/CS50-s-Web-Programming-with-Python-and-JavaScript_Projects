@@ -1,0 +1,3 @@
+staticfiles/
+quizmaster_env
+.pytest_cache

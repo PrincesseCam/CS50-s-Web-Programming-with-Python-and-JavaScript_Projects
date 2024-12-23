@@ -1,0 +1,149 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+
+{% block authenticated_content %}
+<div class="container py-4">
+    <!-- Profile Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>
+                <i class="fas fa-user-circle me-2"></i>
+                {{ user.username }}
+            </h2>
+        </div>
+    </div>
+
+    <!-- Statistics Cards Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-2x text-warning mb-3"></i>
+                    <h5>Average Score</h5>
+                    <div class="display-6">{{ avg_score|floatformat:1 }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-2x text-primary mb-3"></i>
+                    <h5>Total Quizzes</h5>
+                    <div class="display-6">{{ total_quizzes }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x text-success mb-3"></i>
+                    <h5>Topics Mastered</h5>
+                    <div class="display-6">{{ achievements.topics_mastered }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-2x text-info mb-3"></i>
+                    <h5>Questions Answered</h5>
+                    <div class="display-6">{{ achievements.total_questions }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic Progress -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Topic Progress</h5>
+                </div>
+                <div class="card-body">
+                    {% for progress in topic_progress %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>{{ progress.topic.name }}</span>
+                            <span>{{ progress.best_score }}%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bars {% if progress.best_score >= 90 %}bg-success{% elif progress.best_score >= 70 %}bg-info{% else %}bg-warning{% endif %}"
+                                 role="progressbars" style="width: {{ progress.best_score }}%">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and Achievements -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Quizzes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Topic</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quiz in quiz_history %}
+                                <tr>
+                                    <td>{{ quiz.topic.name }}</td>
+                                    <td>
+                                        <span class="badge {% if quiz.score >= 90 %}bg-success{% elif quiz.score >= 70 %}bg-info{% else %}bg-warning{% endif %}">
+                                            {{ quiz.score }}%
+                                        </span>
+                                    </td>
+                                    <td>{{ quiz.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No quizzes taken yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Achievements</h5>
+                </div>
+                <div class="card-body">
+                    <div class="achievement-item mb-3">
+                        <i class="fas fa-medal text-warning me-2"></i>
+                        Perfect Scores: {{ achievements.perfect_scores }}
+                    </div>
+                    {% if strongest_topic %}
+                    <div class="achievement-item mb-3">
+                        <i class="fas fa-star text-success me-2"></i>
+                        Strongest Topic: {{ strongest_topic.topic.name }}
+                    </div>
+                    {% endif %}
+                    {% if improvement > 0 %}
+                    <div class="achievement-item">
+                        <i class="fas fa-chart-line text-primary me-2"></i>
+                        Improvement: +{{ improvement|floatformat:1 }}%
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'quiz/main.js' %}"></script>
+{% endblock %}

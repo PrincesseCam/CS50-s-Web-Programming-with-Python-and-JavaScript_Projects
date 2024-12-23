@@ -1,0 +1,39 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+
+{% block authenticated_content %}
+<div class="container">
+    <div class="card">
+        <div class="card-body text-center">
+            <h2 class="mb-4">Quiz Results</h2>
+            
+            <div class="score-display mb-4">
+                <div class="display-1 mb-2">{{ percentage|floatformat:1 }}%</div>
+                <div class="text-muted">{{ quiz.score }} out of {{ total_questions }} correct</div>
+            </div>
+            
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar {% if percentage >= 70 %}bg-success{% elif percentage >= 40 %}bg-warning{% else %}bg-danger{% endif %}" 
+                     role="progressbar" style="width: {{ percentage }}%">
+                </div>
+            </div>
+            
+            <div class="attempts-info mb-4">
+                <p>Attempts remaining: {{ attempts_remaining }}</p>
+            </div>
+            
+            <div class="action-buttons">
+                {% if attempts_remaining > 0 %}
+                    <a href="{% url 'start_quiz' quiz.topic.id %}" class="btn btn-primary me-2">
+                        Try Again <i class="fas fa-redo ms-2"></i>
+                    </a>
+                {% endif %}
+                <a href="{% url 'topic_list' %}" class="btn btn-outline-primary">
+                    Choose Another Topic <i class="fas fa-list ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'quiz/main.js' %}"></script>
+{% endblock %}

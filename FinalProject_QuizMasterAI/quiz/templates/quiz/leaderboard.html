@@ -1,0 +1,130 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Leaderboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="fas fa-trophy text-warning me-2"></i>Quiz Champions
+                    </h2>
+                    
+                    <!-- Filters -->
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-md-4">
+                            <select class="form-select" id="categoryFilter">
+                                <option value="overall" {% if selected_category == 'overall' %}selected{% endif %}>
+                                    All Categories
+                                </option>
+                                {% for category in categories %}
+                                <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
+                                    {{ category|title }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="periodFilter">
+                                <option value="all" {% if selected_period == 'all' %}selected{% endif %}>All Time</option>
+                                <option value="month" {% if selected_period == 'month' %}selected{% endif %}>This Month</option>
+                                <option value="week" {% if selected_period == 'week' %}selected{% endif %}>This Week</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- User's Stats Card -->
+                    <div class="user-stats-card p-3 mb-4 bg-light rounded">
+                        <h2 class="text-center pb-4">Statistics for all categories</h2>
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h5>Your Rank</h5>
+                                <span class="h2 font-weight-bold">#{{ user_stats.position }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Average Score</h5>
+                                <span class="h2 font-weight-bold">{{ user_stats.avg_score|floatformat:1 }}%</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Topics Completed</h5>
+                                <span class="h2 font-weight-bold">{{ user_stats.total_topics }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Topics Mastered</h5>
+                                <span class="h2 font-weight-bold">{{ user_stats.topics_mastered }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Leaderboard Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>User</th>
+                            <th>Score</th>
+                            <th>Quizzes Taken</th>
+                            {% if selected_category == 'overall' %}
+                            <th>Topics Mastered</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rank in rankings %}
+                        <tr class="{% if rank.user__username == user.username %}table-primary{% endif %}">
+                            <td>
+                                {% if forloop.counter == 1 %}
+                                <i class="fas fa-medal text-warning"></i>
+                                {% elif forloop.counter == 2 %}
+                                <i class="fas fa-medal text-secondary"></i>
+                                {% elif forloop.counter == 3 %}
+                                <i class="fas fa-medal text-bronze"></i>
+                                {% else %}
+                                {{ forloop.counter }}
+                                {% endif %}
+                            </td>
+                            <td>{{ rank.user__username }}</td>
+                            <td>{{ rank.total_score|floatformat:1 }}%</td>
+                            <td>{{ rank.quizzes_taken }}</td>
+                            {% if selected_category == 'overall' %}
+                            <td>{{ rank.topics_mastered }}</td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No rankings available yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle filter changes
+    const categoryFilter = document.getElementById('categoryFilter');
+    const periodFilter = document.getElementById('periodFilter');
+    
+    function updateLeaderboard() {
+        const category = categoryFilter.value;
+        const period = periodFilter.value;
+        window.location.href = `?category=${category}&period=${period}`;
+    }
+    
+    categoryFilter.addEventListener('change', updateLeaderboard);
+    periodFilter.addEventListener('change', updateLeaderboard);
+});
+</script>
+{% endblock %}

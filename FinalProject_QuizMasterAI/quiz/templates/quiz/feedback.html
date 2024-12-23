@@ -1,0 +1,59 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Progress bar -->
+    <div class="quiz-progress mb-4">
+        <div class="progress" style="height: 10px;">
+            <div class="progress-bar bg-primary" role="progressbar" 
+                 style="width: {{ progress }}%" 
+                 aria-valuenow="{{ progress }}" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+            </div>
+        </div>
+        <div class="progress-text text-center mt-2">
+            Question {{ current_question_number }} of {{ total_questions }}
+        </div>
+    </div>
+
+    <!-- Feedback card -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="mb-4">{{ question.text }}</h3>
+            
+            <div class="alert {% if is_correct %}alert-success{% else %}alert-danger{% endif %} mb-4">
+                <h5 class="mb-3">
+                    {% if is_correct %}
+                        <i class="fas fa-check-circle"></i> Correct!
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Incorrect
+                    {% endif %}
+                </h5>
+                
+                <p><strong>Your answer:</strong> {{ selected_answer.text }}</p>
+                {% if not is_correct %}
+                    <p><strong>Correct answer:</strong> {{ correct_answer.text }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="explanation mb-4">
+                <h5>Explanation:</h5>
+                <p>{{ question.explanation }}</p>
+            </div>
+            
+            {% if next_question %}
+                <a href="{% url 'quiz_question' quiz.id %}" class="btn btn-primary">
+                    Next Question <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            {% else %}
+                <a href="{% url 'quiz_results' quiz.id %}" class="btn btn-success">
+                    See Results <i class="fas fa-flag-checkered ms-2"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script src="{% static 'quiz/main.js' %}"></script>
+{% endblock %}

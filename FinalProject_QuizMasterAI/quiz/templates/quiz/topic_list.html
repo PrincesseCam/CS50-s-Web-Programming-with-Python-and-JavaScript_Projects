@@ -1,0 +1,168 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+{% block authenticated_content %}
+
+<div class="container">
+    <div class="text-center p-2">
+        <h2>Select a Topic and start the quiz</h2>
+    </div>
+    <!-- Search Section -->
+    <div class="search-container mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="topicSearch" class="form-control border-start-0" 
+                   placeholder="Search topics..." value="{{ request.GET.search|default:'' }}">
+        </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <ul class="nav nav-pills mb-4" id="categoryTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-category="all" data-url="?page=1&category=all">All Topics</button>
+        </li>
+        {% for category in categories %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-category="{{ category }}" data-url="?page=1&category={{ category }}">
+                {{ category|title }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Topics Grid -->
+    <div class="topics-grid">
+        {% regroup topics by category as category_list %}
+        {% for category in category_list %}
+        <div class="category-section mb-4" data-category="{{ category.grouper }}">
+            <h3 class="category-title mb-3">{{ category.grouper|title }}</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for topic in category.list %}
+                <div class="col topic-card" data-topic-name="{{ topic.name|lower }}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="difficulty-badge 
+                                      {% if topic.difficulty_level == 'beginner' %}badge bg-success
+                                      {% elif topic.difficulty_level == 'intermediate' %}badge bg-warning
+                                      {% else %}badge bg-danger{% endif %} mb-2">
+                                {{ topic.difficulty_level|title }}
+                            </div>
+                            <h5 class="card-title">{{ topic.name }}</h5>
+                            <p class="card-text text-muted">{{ topic.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <a href="{% url 'start_quiz' topic.id %}" class="btn btn-primary">
+                                    <i class="fas fa-play me-2"></i>Start Quiz
+                                </a>
+                                <span class="completion-badge" data-bs-toggle="tooltip" 
+                                      title="Your best score">
+                                    {% if topic.user_progress %}
+                                        {{ topic.user_progress.best_score }}%
+                                    {% else %}
+                                        New
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if topics_page.paginator.num_pages > 1 %}
+    <nav aria-label="Topic pagination" class="pagination-container mt-4" id="paginationNav">
+        <ul class="pagination justify-content-center">
+            <!-- Previous page -->
+            {% if topics_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ topics_page.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+            
+            <!-- Page numbers -->
+            {% for num in topics_page.paginator.page_range %}
+                {% if num == topics_page.number %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > topics.number|add:'-3' and num < topics_page.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            <!-- Next page -->
+            {% if topics_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ topics_page.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('topicSearch');
+    const topicCards = document.querySelectorAll('.topic-card');
+    const categoryButtons = document.querySelectorAll('#categoryTabs button');
+    
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(tooltip => new bootstrap.Tooltip(tooltip));
+    
+    // Set the active class based on the current URL category
+    const currentCategory = new URLSearchParams(window.location.search).get('category') || 'all';
+    categoryButtons.forEach(button => {
+        if (button.dataset.category === currentCategory) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+
+    // Category filtering
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = this.dataset.url;          
+        });
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value;
+        
+        // Only trigger search if input length is 1 or more
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('search', searchTerm);
+        currentUrl.searchParams.set('page', 1); // Reset to the first page on search
+        window.location.href = currentUrl.toString(); // Redirect to the updated URL
+
+    });
+
+    function getCurrentCategory() {
+        return document.querySelector('#categoryTabs button.active').dataset.category;
+    }
+
+});
+</script>
+
+{% endblock %}

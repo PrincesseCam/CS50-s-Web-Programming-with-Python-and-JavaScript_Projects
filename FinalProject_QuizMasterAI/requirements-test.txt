@@ -1,0 +1,9 @@
+pytest==7.4.3             # Testing framework
+pytest-django==4.7.0      # Django plugin for pytest
+pytest-cov==4.1.0         # Coverage reporting
+factory-boy==3.3.0        # For generating test data
+faker==20.1.0             # For generating fake data in tests
+coverage==7.3.2           # For code coverage analysis
+selenium==4.15.2          # For browser automation testing
+webdriver-manager==4.0.1  # For managing webdriver binaries
+freezegun==1.2.2          # For time-based testing

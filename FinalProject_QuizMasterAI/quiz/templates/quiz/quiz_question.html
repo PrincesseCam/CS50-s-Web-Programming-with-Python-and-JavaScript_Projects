@@ -1,0 +1,57 @@
+{% extends 'quiz/layout.html' %}
+{% load static %}
+
+{% block authenticated_content %}
+
+<div class="container">
+    <!-- Progress Section -->
+    <div class="quiz-progress mb-4">
+        <div class="progress" style="height: 10px;">
+            <div class="progress-bar bg-primary" 
+            role="progressbar" 
+            data-progress="{{ progress }}"
+            data-total-questions="{{ total_questions }}"
+            style="width: {{ progress }}%"
+            aria-valuenow="{{ progress }}" 
+            aria-valuemin="0" 
+            aria-valuemax="100">
+            </div>
+        </div>
+        <div class="progress-text text-center mt-2">
+            Question {{ current_question_number }} of {{ total_questions }}
+        </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card animate__animated animate__fadeIn">
+        <div class="card-body">
+
+            <h3 class="mb-4">
+                <i class="fas fa-question-circle text-primary me-2"></i>
+                {{ question.text }}
+            </h3>
+            
+            <form method="post" id="quiz-form">
+                {% csrf_token %}
+                {% for answer in question.answer_set.all %}
+                <div class="answer-option mb-3 animate__animated animate__fadeInUp" 
+                    style="animation-delay: {{ forloop.counter0 }}00ms">
+                    <input type="radio" name="answer" value="{{ answer.id }}" 
+                        id="answer{{ answer.id }}" class="answer-input" required>
+                    <label for="answer{{ answer.id }}" 
+                    class="answer-label p-3 rounded w-200">
+                        {{ answer.text }}
+                    </label>
+                </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-primary w-100 mt-4 animate__animated animate__fadeIn"
+                        style="animation-delay: 0.5s">
+                    <i class="fas fa-check me-2"></i>Submit Answer
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'quiz/main.js' %}"></script>
+{% endblock %}
