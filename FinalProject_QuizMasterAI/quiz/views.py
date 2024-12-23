@@ -384,29 +384,45 @@ def quiz_question(request, quiz_id):
         answer_id = request.POST.get('answer')
         if answer_id:
             selected_answer = get_object_or_404(Answer, id=answer_id)
-            correct_answer = current_question.answer_set.get(is_correct=True)
+
+            try:
+                # Get the first correct answer and log if there are multiple correct answer
+                correct_answers = current_question.answer_set.filter(is_correct=True)
+                if correct_answers.count() > 1:
+                    print(f"Warning: Question {current_question.id} has multiple correct answers")
+                correct_answer = correct_answers.first()
+                
+                if not correct_answer:
+                    # Handle case where no correct answer exists
+                    print(f"Error: Question {current_question.id} has no correct answer")
+                    messages.error(request, "An error occurred with this question. Please skip it.")
+                    return redirect('quiz_question', quiz_id=quiz.id)
             
-            # Update quiz score if correct
-            if selected_answer.is_correct:
-                quiz.score += 1
-                quiz.save()
-            
-            # Mark question as answered
-            if current_question.id not in answered_questions:
-                answered_questions.append(current_question.id)
-                request.session[f'quiz_{quiz_id}_answered'] = answered_questions
-            
-            return render(request, 'quiz/feedback.html', {
-                'quiz': quiz,
-                'question': current_question,
-                'selected_answer': selected_answer,
-                'correct_answer': correct_answer,
-                'is_correct': selected_answer.is_correct,
-                'next_question': len(remaining_questions) > 1,
-                'current_question_number': current_question_number,
-                'total_questions': total_questions,
-                'progress': progress
-            })
+                # Update quiz score if correct
+                if selected_answer.is_correct:
+                    quiz.score += 1
+                    quiz.save()
+                
+                # Mark question as answered
+                if current_question.id not in answered_questions:
+                    answered_questions.append(current_question.id)
+                    request.session[f'quiz_{quiz_id}_answered'] = answered_questions
+                
+                return render(request, 'quiz/feedback.html', {
+                    'quiz': quiz,
+                    'question': current_question,
+                    'selected_answer': selected_answer,
+                    'correct_answer': correct_answer,
+                    'is_correct': selected_answer.is_correct,
+                    'next_question': len(remaining_questions) > 1,
+                    'current_question_number': current_question_number,
+                    'total_questions': total_questions,
+                    'progress': progress
+                })
+            except Exception as e:
+                print(f"Error processing answer: {str(e)}")
+                messages.error(request, "An error occurred while processing your answer. Please try again.")
+                return redirect('quiz_question', quiz_id=quiz.id)
     
     return render(request, 'quiz/quiz_question.html', {
         'quiz': quiz,
