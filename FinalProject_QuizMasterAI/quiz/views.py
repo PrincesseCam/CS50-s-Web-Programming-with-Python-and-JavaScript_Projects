@@ -73,7 +73,7 @@ def user_profile(request):
     
     # Calculate overall statistics
     total_quizzes = quiz_history.count()  # Using count() method instead of Count
-    avg_score = quiz_history.aggregate(Avg('score'))['score__avg'] or 0
+    avg_score = UserTopicProgress.objects.filter(user=request.user).aggregate(Avg('best_score'))['best_score__avg'] or 0
     
     # Get progress by topic with proper counting
     topic_progress = UserTopicProgress.objects.filter(user=request.user).select_related('topic')
@@ -82,7 +82,7 @@ def user_profile(request):
     achievements = {
         'topics_attempted': topic_progress.count(),
         'topics_mastered': topic_progress.filter(best_score__gte=80).count(),
-        'perfect_scores': quiz_history.filter(score=100).count(),
+        'perfect_scores': quiz_history.filter(score=5).count(),
         'total_questions': Question.objects.filter(quiz__user=request.user).count()
     }
     

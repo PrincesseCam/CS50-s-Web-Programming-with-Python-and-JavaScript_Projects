@@ -92,6 +92,7 @@
                             <thead>
                                 <tr>
                                     <th>Topic</th>
+                                    <th>Difficulty</th>
                                     <th>Score</th>
                                     <th>Date</th>
                                 </tr>
@@ -100,9 +101,12 @@
                                 {% for quiz in quiz_history %}
                                 <tr>
                                     <td>{{ quiz.topic.name }}</td>
+                                    <td class="badge {% if quiz.topic.difficulty_level == 'beginner' %}bg-success{% elif quiz.topic.difficulty_level == 'intermediate' %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ quiz.topic.difficulty_level|title }}
+                                    </td>
                                     <td>
-                                        <span class="badge {% if quiz.score >= 90 %}bg-success{% elif quiz.score >= 70 %}bg-info{% else %}bg-warning{% endif %}">
-                                            {{ quiz.score }}%
+                                        <span class="badge {% if quiz.score >= 4 %}bg-success{% elif quiz.score >= 3 %}bg-info{% else %}bg-warning{% endif %}">
+                                            {{ quiz.score }}/5
                                         </span>
                                     </td>
                                     <td>{{ quiz.created_at|date:"M d, Y" }}</td>
