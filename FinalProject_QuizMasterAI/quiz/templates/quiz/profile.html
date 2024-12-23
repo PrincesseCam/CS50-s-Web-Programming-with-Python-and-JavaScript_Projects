@@ -101,8 +101,10 @@
                                 {% for quiz in quiz_history %}
                                 <tr>
                                     <td>{{ quiz.topic.name }}</td>
-                                    <td class="badge {% if quiz.topic.difficulty_level == 'beginner' %}bg-success{% elif quiz.topic.difficulty_level == 'intermediate' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    <td>
+                                        <span class="badge rounded-pill {% if quiz.topic.difficulty_level == 'beginner' %}bg-success{% elif quiz.topic.difficulty_level == 'intermediate' %}bg-warning{% else %}bg-danger{% endif %}">
                                         {{ quiz.topic.difficulty_level|title }}
+                                        </span>
                                     </td>
                                     <td>
                                         <span class="badge {% if quiz.score >= 4 %}bg-success{% elif quiz.score >= 3 %}bg-info{% else %}bg-warning{% endif %}">
@@ -113,7 +115,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center">No quizzes taken yet</td>
+                                    <td colspan="4" class="text-center">No quizzes taken yet</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
