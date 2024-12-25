@@ -107,7 +107,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge {% if quiz.score >= 4 %}bg-success{% elif quiz.score >= 3 %}bg-info{% else %}bg-warning{% endif %}">
+                                        <span class="badge {% if quiz.score >= 4 %}bg-success{% elif quiz.score >= 3 %}bg-info{% elif quiz.score >= 1 %}bg-warning{% else %}bg-danger{% endif %}">
                                             {{ quiz.score }}/5
                                         </span>
                                     </td>
